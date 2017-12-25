@@ -19,9 +19,10 @@ def run_server(csv_file):
 
 def mapfn(k, v):
     import nltk.tokenize as tkz
+    import string
 
     char, line = v['Character'], v['Line']
-    for w in tkz.wordpunct_tokenize(line):
+    for w in tkz.wordpunct_tokenize(line.translate(None, string.puncuation)):
         yield char, w.lower()
 
 

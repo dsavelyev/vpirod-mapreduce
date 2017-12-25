@@ -3,18 +3,19 @@
 import csv
 import glob
 import os.path
+import string
 import sys
 
 import mincemeat as mm
 
 
 def readall(fname):
-    with open(fname, 'ru') as f:
+    with open(fname, 'r') as f:
         return f.read()
 
 
 def run_server(docs, docnames):
-    rdr = {docname: readall(fname) for fname, docname in zip(docs, docnames)}
+    rdr = {docname: readall(fname).translate(None, string.punctuation) for fname, docname in zip(docs, docnames)}
 
     s = mm.Server()
     s.datasource = rdr
@@ -40,7 +41,7 @@ if __name__ == '__main__':
 
     out = run_server(docs, docnames)
 
-    with open(sys.argv[2], 'wu') as outf:
+    with open(sys.argv[2], 'w') as outf:
         wr = csv.writer(outf)
         wr.writerow(['Term'] + docnames)
         wr.writerows([[k] + v for k, v in out.iteritems()])
